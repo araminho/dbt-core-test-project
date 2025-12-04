@@ -1,0 +1,61 @@
+sources:
+  - name: job
+    database: dbt_project
+    schema: raw
+    description: Job related raw data
+    tables:
+      - name: candidates
+        description: Raw candidates data
+        config:
+          freshness:
+            warn_after:
+              count: 30
+              period: day
+            error_after:
+              count: 365
+              period: day
+          loaded_at_query: "SELECT MAX(TO_TIMESTAMP(_created_micros)) FROM {{ this }}"
+      - name: employees
+        description: Raw employees data    
+        config:
+          freshness:
+            warn_after:
+              count: 10
+              period: day
+            error_after:
+              count: 30
+              period: day
+          loaded_at_query: "SELECT MAX(TO_TIMESTAMP(_created_micros)) FROM {{ this }}"
+      - name: interviews
+        description: Raw interviews data
+        config:
+          freshness:
+            warn_after:
+              count: 365
+              period: day
+            error_after:
+              count: 730
+              period: day
+          loaded_at_query: "SELECT MAX(TO_TIMESTAMP(_created_micros)) FROM {{ this }}"
+      - name: job_functions
+        description: Raw employees data    
+        config:
+          freshness:
+            warn_after:
+              count: 365
+              period: day
+            error_after:
+              count: 730
+              period: day
+          loaded_at_query: "SELECT MAX(TO_TIMESTAMP(_created_micros)) FROM {{ this }}"
+      - name: skills
+        description: Raw skills data    
+        config:
+          freshness:
+            warn_after:
+              count: 365
+              period: day
+            error_after:
+              count: 730
+              period: day
+          loaded_at_query: "SELECT MAX(TO_TIMESTAMP(_created_micros)) FROM {{ this }}"
