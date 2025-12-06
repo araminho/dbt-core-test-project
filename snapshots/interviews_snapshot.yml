@@ -1,0 +1,8 @@
+snapshots:
+  - name: interviews_snapshot
+    relation: ref('stg_interview')
+    config:
+      unique_key: offset
+      strategy: timestamp
+      updated_at: updated_at
+      invalidate_hard_deletes: true
