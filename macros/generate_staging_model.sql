@@ -1,4 +1,13 @@
-{% macro generate_staging_model(table_name) -%}
+{% macro generate_staging_model(
+    table_name,
+    unique_key='offset',
+    updated_at_column='updated_at'
+) -%}
+
+{# --------------------------------------------------
+   1. Read transformation config from seed
+-------------------------------------------------- #}
+
 {%- set query_to_run -%}
 select
   raw_column_name,
@@ -16,16 +25,50 @@ where upper(raw_table_name) = upper('{{ table_name }}')
     {%- set results_list = [] -%}
 {%- endif -%}
 
-select
-{%- for row in results_list %}
-    {%- if row[2] == 'TIMESTAMP_NTZ' %}
-        TO_TIMESTAMP({{ row[0] }}) as {{ row[1] }}
-    {%- elif row[2] != 'STRING' %}
-        cast({{ row[0] }} as {{ row[2] }}) as {{ row[1] }}
-    {%- else %}
-        {{ row[0] }} as {{ row[1] }}
-    {%- endif %}
-    {%- if not loop.last %},{%- endif %}
-{%- endfor %}
-from {{ source('job', table_name) }}
+{# --------------------------------------------------
+   2. Base projection (renaming + casting)
+-------------------------------------------------- #}
+
+with base as (
+
+    select
+    {%- for row in results_list %}
+        {%- if row[2] == 'TIMESTAMP_NTZ' %}
+            TO_TIMESTAMP({{ row[0] }}) as {{ row[1] }}
+        {%- elif row[2] != 'STRING' %}
+            cast({{ row[0] }} as {{ row[2] }}) as {{ row[1] }}
+        {%- else %}
+            {{ row[0] }} as {{ row[1] }}
+        {%- endif %}
+        {%- if not loop.last %},{%- endif %}
+    {%- endfor %}
+    from {{ source('job', table_name) }}
+
+),
+
+{# --------------------------------------------------
+   3. Apply snapshot semantics
+-------------------------------------------------- #}
+
+versioned as (
+    select
+        *,
+        {{ updated_at_column }} as row_valid_from,
+        lead({{ updated_at_column }})
+            over (
+                partition by {{ unique_key }}
+                order by {{ updated_at_column }}
+            ) as row_valid_to
+    from base
+),
+
+final as (
+    select
+        *,
+        row_valid_to is null as row_is_active
+    from versioned
+)
+
+select * from final
+
 {%- endmacro %}
