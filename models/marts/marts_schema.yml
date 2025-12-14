@@ -1,0 +1,140 @@
+models:
+  - name: dim_candidate
+    description: "Dimension table for candidates"
+    columns:
+      - name: offset
+        data_tests:
+          - unique
+          - not_null
+      - name: id
+        data_tests:
+          - not_null
+      - name: primary_skill_id
+        constraints:
+          - type: foreign_key
+            to: ref('dim_primary_skill')
+            to_columns: [ id ]
+      - name: staffing_status
+      - name: english_level
+      - name: job_function_id
+        constraints:
+          - type: foreign_key
+            to: ref('dim_job_function')
+            to_columns: [ id ]
+      - name: valid_from_datetime
+      - name: valid_to_datetime
+
+  - name: dim_employee
+    description: "Dimension table for employees"
+    columns:
+      - name: offset
+        data_tests:
+          - unique
+          - not_null
+      - name: id
+        data_tests:
+          - not_null
+      - name: job_function_id
+        constraints:
+          - type: foreign_key
+            to: ref('dim_job_function')
+            to_columns: [ id ]
+      - name: primary_skill_id
+        constraints:
+          - type: foreign_key
+            to: ref('dim_primary_skill')
+            to_columns: [ id ]
+      - name: production_category
+      - name: employment_status
+      - name: org_category
+      - name: org_category_type
+      - name: work_start_date
+      - name: work_end_date
+      - name: is_active
+      - name: valid_from_datetime
+      - name: valid_to_datetime
+
+  - name: dim_job_function
+    description: "Dimension table for job functions"
+    columns:
+      - name: id
+        data_tests:
+          - unique
+          - not_null
+      - name: base_name
+      - name: category
+      - name: is_active
+      - name: level
+      - name: track,
+      - name: seniority_level
+      - name: seniority_index
+
+  - name: dim_primary_skill
+    description: "Dimension table for primary skills"
+    columns:
+      - name: id
+        data_tests:
+          - unique
+          - not_null
+      - name: is_active
+      - name: name
+      - name: type
+      - name: url
+      - name: parent_id
+
+  - name: fct_interview
+    description: "Fact table for interviews"
+    columns:
+      - name: id
+        data_tests:
+          - unique
+          - not_null
+      - name: candidate_type
+      - name: candidate_offset
+        constraints:
+          - type: foreign_key
+            to: ref('dim_candidate')
+            to_columns: [ offset ]
+      - name: status
+      - name: interviewer_offset
+        constraints:
+          - type: foreign_key
+            to: ref('dim_employee')
+            to_columns: [ offset ]
+      - name: location
+      - name: is_logged
+      - name: is_media_available
+      - name: run_type
+      - name: type
+      - name: media_status
+      - name: invite_answer_status
+      - name: created_date
+        constraints:
+          - type: foreign_key
+            to: ref('dim_date')
+            to_columns: [ date ]
+      - name: created_datetime
+      - name: requested_datetime
+      - name: scheduled_datetime
+      - name: started_datetime
+      - name: finished_datetime
+      - name: feedback_provided_datetime
+      - name: cancelled_datetime
+      - name: interview_duration_minutes
+      - name: feedback_delay_days
+
+  - name: dim_date
+    description: "Dimension table for dates"
+    columns:
+      - name: date
+      - name: year
+      - name: quarter
+      - name: month
+      - name: day
+      - name: week
+      - name: day_of_week
+      - name: day_name
+      - name: month_name
+      - name: is_weekend
+      - name: is_holiday
+

@@ -10,7 +10,7 @@ with spine as (
 
 final as (
     select
-        date_day                                   as date,
+        to_date(date_day)                          as date,
         year(date_day)                             as year,
         quarter(date_day)                          as quarter,
         month(date_day)                            as month,
@@ -18,6 +18,7 @@ final as (
         week(date_day)                             as week,
         dayofweek(date_day)                        as day_of_week,
         dayname(date_day)                          as day_name,
+        monthname(date_day)                        as month_name,
         iff(dayofweek(date_day) in (6,7), true, false) as is_weekend,
         false                                      as is_holiday
     from spine
