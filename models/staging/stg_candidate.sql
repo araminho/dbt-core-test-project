@@ -1,3 +1,7 @@
+{{ config(
+    materialized='table'
+) }}
+
 {{ generate_staging_model(
     table_name='candidates',
     unique_key='candidate_id',

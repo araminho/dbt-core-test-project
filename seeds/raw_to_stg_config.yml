@@ -6,5 +6,3 @@ seeds:
         raw_column_name: STRING
         target_column_name: STRING
         target_data_type: STRING
-        target_order_num: INT
-        notes: STRING

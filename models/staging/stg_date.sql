@@ -10,17 +10,17 @@ with spine as (
 
 final as (
     select
-        to_date(date_day)                          as date,
-        year(date_day)                             as year,
-        quarter(date_day)                          as quarter,
-        month(date_day)                            as month,
-        day(date_day)                              as day,
-        week(date_day)                             as week,
-        dayofweek(date_day)                        as day_of_week,
-        dayname(date_day)                          as day_name,
-        monthname(date_day)                        as month_name,
-        iff(dayofweek(date_day) in (6,7), true, false) as is_weekend,
-        false                                      as is_holiday
+        DATE(date_day)                                            as date,
+        EXTRACT(YEAR FROM date_day)                               as year,
+        EXTRACT(QUARTER FROM date_day)                            as quarter,
+        EXTRACT(MONTH FROM date_day)                              as month,
+        EXTRACT(DAY FROM date_day)                                as day,
+        EXTRACT(WEEK FROM date_day)                               as week,
+        EXTRACT(DAYOFWEEK FROM date_day)                          as day_of_week,
+        FORMAT_DATE('%A', DATE(date_day))                         as day_name,
+        FORMAT_DATE('%B', DATE(date_day))                         as month_name,
+        IF(EXTRACT(DAYOFWEEK FROM date_day) IN (1,7), true, false) as is_weekend,
+        false                                                     as is_holiday
     from spine
 )
 

@@ -33,10 +33,10 @@ with base as (
 
     select
     {%- for row in results_list %}
-        {%- if row[2] == 'TIMESTAMP_NTZ' %}
-            TO_TIMESTAMP({{ row[0] }}) as {{ row[1] }}
+        {%- if row[2] == 'TIMESTAMP' %}
+            TIMESTAMP_MICROS(SAFE_CAST({{ row[0] }} as INT64)) as {{ row[1] }}
         {%- elif row[2] != 'STRING' %}
-            cast({{ row[0] }} as {{ row[2] }}) as {{ row[1] }}
+            SAFE_CAST({{ row[0] }} as {{ row[2] }}) as {{ row[1] }}
         {%- else %}
             {{ row[0] }} as {{ row[1] }}
         {%- endif %}

@@ -14,24 +14,28 @@ with interview_versions as (
 ------------------------------------------- */
 interview_created_state as (
 
-    select
-        interview_id,
-        candidate_type,
-        candidate_id,
-        interviewer_id,
-        location,
-        is_logged,
-        is_media_available,
-        run_type,
-        type,
-        media_status,
-        invite_answer_status,
-        created_at
-    from interview_versions
-    qualify row_number() over (
-        partition by interview_id
-        order by row_valid_from
-    ) = 1
+    select *
+    from (
+        select
+            interview_id,
+            candidate_type,
+            candidate_id,
+            interviewer_id,
+            location,
+            is_logged,
+            is_media_available,
+            run_type,
+            type,
+            media_status,
+            invite_answer_status,
+            created_at,
+            row_number() over (
+                partition by interview_id
+                order by row_valid_from
+            ) as rn
+        from interview_versions
+    )
+    where rn = 1
 
 ),
 
@@ -105,8 +109,8 @@ select
     /* ---------------------------------------
        Created timestamps
     --------------------------------------- */
-    cast(ics.created_at as date) as created_date,
-    ics.created_at as created_datetime,
+    DATE(ics.created_at) as created_date,
+    ics.created_at      as created_datetime,
 
     /* ---------------------------------------
        Status timestamps
@@ -124,13 +128,21 @@ select
     case
         when status_timestamps.started_datetime is not null
          and status_timestamps.finished_datetime is not null
-        then datediff('minute', status_timestamps.started_datetime, status_timestamps.finished_datetime)
+        then TIMESTAMP_DIFF(
+            status_timestamps.finished_datetime,
+            status_timestamps.started_datetime,
+            MINUTE
+        )
     end as interview_duration_minutes,
 
     case
         when status_timestamps.finished_datetime is not null
          and status_timestamps.feedback_provided_datetime is not null
-        then datediff('day', status_timestamps.finished_datetime, status_timestamps.feedback_provided_datetime)
+        then TIMESTAMP_DIFF(
+            status_timestamps.feedback_provided_datetime,
+            status_timestamps.finished_datetime,
+            DAY
+        )
     end as feedback_delay_days
 
 from interview_created_state as ics

@@ -1,3 +1,7 @@
+{{ config(
+    materialized='table'
+) }}
+
 {{ generate_staging_model(
     table_name='job_functions',
     unique_key='job_function_id',

@@ -1,7 +1,6 @@
 sources:
   - name: job
-    database: dbt_project
-    schema: raw
+    schema: dbt_source
     description: Job related raw data
     tables:
       - name: candidates
