@@ -1,0 +1,69 @@
+models:
+  - name: stg_candidate
+    description: "Staging table for candidates"
+    data_tests:
+      - unique:
+          column_name: offset
+      - not_null:
+          column_name: candidate_id
+    columns:
+      - name: primary_skill_id
+        data_tests:
+          - relationships:
+              to: ref('stg_skills')
+              field: skill_id
+      - name: job_function_id
+        data_tests:
+          - relationships:
+              to: ref('stg_job_functions')
+              field: job_function_id
+  - name: stg_employee
+    description: "Staging table for employees"
+    data_tests:
+      - unique:
+          column_name: offset
+      - not_null:
+          column_name: employee_id
+    columns:
+      - name: primary_skill_id
+        data_tests:
+          - relationships:
+              to: ref('stg_skills')
+              field: skill_id
+      - name: job_function_id
+        data_tests:
+          - relationships:
+              to: ref('stg_job_functions')
+              field: job_function_id
+  - name: stg_interview
+    description: "Staging table for interviews"
+    data_tests:
+      - unique:
+          column_name: offset
+      - not_null:
+          column_name: interview_id
+    columns:
+      - name: candidate_id
+        data_tests:
+          - relationships:
+              to: ref('stg_candidate')
+              field: candidate_id
+      - name: interviewer_id
+        data_tests:
+          - relationships:
+              to: ref('stg_employee')
+              field: employee_id
+  - name: stg_job_function
+    description: "Staging table for job functions"
+    data_tests:
+      - unique:
+          column_name: offset
+      - not_null:
+          column_name: job_function_id
+  - name: stg_skills
+    description: "Staging table for skills"
+    data_tests:
+      - unique:
+          column_name: offset
+      - not_null:
+          column_name: skill_id

@@ -5,6 +5,22 @@ sources:
     tables:
       - name: candidates
         description: Raw candidates data
+        data_tests:
+          - unique:
+              column_name: _offset
+          - not_null:
+              column_name: candidate_id
+        columns:
+          - name: primary_skill_id
+            data_tests:
+              - relationships:
+                  to: source('job', 'skills')
+                  field: id
+          - name: job_function_id
+            data_tests:
+              - relationships:
+                  to: source('job', 'job_functions')
+                  field: job_function_id
         config:
           freshness:
             warn_after:
@@ -13,9 +29,25 @@ sources:
             error_after:
               count: 365
               period: day
-          loaded_at_query: "SELECT MAX(TO_TIMESTAMP(_created_micros)) FROM {{ this }}"
+          loaded_at_query: "SELECT MAX(TIMESTAMP_MICROS(SAFE_CAST(_created_micros AS INT64))) FROM {{ this }}"
       - name: employees
-        description: Raw employees data    
+        description: Raw employees data
+        data_tests:
+          - unique:
+              column_name: _offset
+          - not_null:
+              column_name: employee_id
+        columns:
+          - name: primary_skill_id
+            data_tests:
+              - relationships:
+                  to: source('job', 'skills')
+                  field: id
+          - name: job_function_id
+            data_tests:
+              - relationships:
+                  to: source('job', 'job_functions')
+                  field: job_function_id
         config:
           freshness:
             warn_after:
@@ -24,9 +56,25 @@ sources:
             error_after:
               count: 30
               period: day
-          loaded_at_query: "SELECT MAX(TO_TIMESTAMP(_created_micros)) FROM {{ this }}"
+          loaded_at_query: "SELECT MAX(TIMESTAMP_MICROS(SAFE_CAST(_created_micros AS INT64))) FROM {{ this }}"
       - name: interviews
         description: Raw interviews data
+        data_tests:
+          - unique:
+              column_name: _offset
+          - not_null:
+              column_name: id
+        columns:
+          - name: candidate_id
+            data_tests:
+              - relationships:
+                  to: source('job', 'candidates')
+                  field: candidate_id
+          - name: interviewer_id
+            data_tests:
+              - relationships:
+                  to: source('job', 'employees')
+                  field: employee_id
         config:
           freshness:
             warn_after:
@@ -35,9 +83,14 @@ sources:
             error_after:
               count: 730
               period: day
-          loaded_at_query: "SELECT MAX(TO_TIMESTAMP(_created_micros)) FROM {{ this }}"
+          loaded_at_query: "SELECT MAX(TIMESTAMP_MICROS(SAFE_CAST(_created_micros AS INT64))) FROM {{ this }}"
       - name: job_functions
-        description: Raw employees data    
+        description: Raw job functions data
+        data_tests:
+          - unique:
+              column_name: _offset
+          - not_null:
+              column_name: job_function_id
         config:
           freshness:
             warn_after:
@@ -46,9 +99,14 @@ sources:
             error_after:
               count: 730
               period: day
-          loaded_at_query: "SELECT MAX(TO_TIMESTAMP(_created_micros)) FROM {{ this }}"
+          loaded_at_query: "SELECT MAX(TIMESTAMP_MICROS(SAFE_CAST(_created_micros AS INT64))) FROM {{ this }}"
       - name: skills
-        description: Raw skills data    
+        description: Raw skills data
+        data_tests:
+          - unique:
+              column_name: _offset
+          - not_null:
+              column_name: id
         config:
           freshness:
             warn_after:
@@ -57,4 +115,4 @@ sources:
             error_after:
               count: 730
               period: day
-          loaded_at_query: "SELECT MAX(TO_TIMESTAMP(_created_micros)) FROM {{ this }}"
+          loaded_at_query: "SELECT MAX(TIMESTAMP_MICROS(SAFE_CAST(_created_micros AS INT64))) FROM {{ this }}"
