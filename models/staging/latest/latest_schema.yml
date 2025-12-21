@@ -1,6 +1,6 @@
 models:
-  - name: stg_candidate
-    description: "Staging table for candidates"
+  - name: stg_candidate_latest
+    description: "Latest records for candidates in staging"
     columns:
       - name: offset
         data_tests:
@@ -9,9 +9,7 @@ models:
       - name: candidate_id
         data_tests:
           - not_null
-          - unique:
-              config:
-                where: "row_is_active = TRUE"
+          - unique
       - name: primary_skill_id
         data_tests:
           - relationships:
@@ -22,14 +20,8 @@ models:
           - relationships:
               to: ref('stg_job_functions')
               field: job_function_id
-    tests:
-      - dbt_utils.unique_combination_of_columns:
-          arguments:
-            combination_of_columns:
-              - candidate_id
-              - row_valid_from
-  - name: stg_employee
-    description: "Staging table for employees"
+  - name: stg_employee_latest
+    description: "Latest records for employees in staging"
     columns:
       - name: offset
         data_tests:
@@ -38,9 +30,7 @@ models:
       - name: employee_id
         data_tests:
           - not_null
-          - unique:
-              config:
-                where: "row_is_active = TRUE"
+          - unique
       - name: primary_skill_id
         data_tests:
           - relationships:
@@ -51,8 +41,8 @@ models:
           - relationships:
               to: ref('stg_job_functions')
               field: job_function_id
-  - name: stg_interview
-    description: "Staging table for interviews"
+  - name: stg_interview_latest
+    description: "Latest records for interviews in staging"
     columns:
       - name: offset
         data_tests:
@@ -61,21 +51,19 @@ models:
       - name: interview_id
         data_tests:
           - not_null
-          - unique:
-              config:
-                where: "row_is_active = TRUE"
+          - unique
       - name: candidate_id
         data_tests:
           - relationships:
-              to: ref('stg_candidate')
+              to: ref('stg_candidate_latest')
               field: candidate_id
       - name: interviewer_id
         data_tests:
           - relationships:
-              to: ref('stg_employee')
+              to: ref('stg_employee_latest')
               field: employee_id
-  - name: stg_job_function
-    description: "Staging table for job functions"
+  - name: stg_job_function_latest
+    description: "Latest records for job functions in staging"
     columns:
       - name: offset
         data_tests:
@@ -84,11 +72,9 @@ models:
       - name: job_function_id
         data_tests:
           - not_null
-          - unique:
-              config:
-                where: "row_is_active = TRUE"
-  - name: stg_skills
-    description: "Staging table for skills"
+          - unique
+  - name: stg_skill_latest
+    description: "Latest records for skills in staging"
     columns:
       - name: offset
         data_tests:
@@ -97,6 +83,4 @@ models:
       - name: skill_id
         data_tests:
           - not_null
-          - unique:
-              config:
-                where: "row_is_active = TRUE"
+          - unique
