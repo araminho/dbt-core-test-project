@@ -1,6 +1,11 @@
 models:
   - name: dim_candidate
     description: "Dimension table for candidates"
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - id
+            - valid_from_datetime
     columns:
       - name: _offset
         data_tests:

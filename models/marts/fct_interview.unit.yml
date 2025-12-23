@@ -1,0 +1,64 @@
+version: 2
+
+unit_tests:
+  - name: fct_interview__happy_path_duration_and_feedback
+    description: >
+      Ensures interview status timestamps are pivoted correctly
+      and duration / feedback metrics are calculated as expected.
+
+    model: fct_interview
+
+    given:
+      - input: ref('stg_interview')
+        rows:
+          - interview_id: 1
+            status: REQUESTED
+            candidate_type: internal
+            candidate_id: 100
+            interviewer_id: 200
+            location: remote
+            is_logged: true
+            is_media_available: true
+            run_type: normal
+            type: technical
+            media_status: available
+            invite_answer_status: accepted
+            created_at: 2024-01-01 10:00:00
+            row_valid_from: 2024-01-01 10:00:00
+
+          - interview_id: 1
+            status: SCHEDULED
+            row_valid_from: 2024-01-01 11:00:00
+
+          - interview_id: 1
+            status: IN_PROGRESS
+            row_valid_from: 2024-01-02 09:00:00
+
+          - interview_id: 1
+            status: PENDING_FEEDBACK
+            row_valid_from: 2024-01-02 10:30:00
+
+          - interview_id: 1
+            status: COMPLETED
+            row_valid_from: 2024-01-04 12:00:00
+
+      - input: ref('stg_interview_latest')
+        rows:
+          - interview_id: 1
+            status: COMPLETED
+
+      - input: ref('dim_candidate')
+        rows:
+          - id: 100
+            _offset: 9001
+            valid_from_datetime: 2023-01-01 00:00:00
+            valid_to_datetime: null
+
+    expect:
+      rows:
+        - id: 1
+          candidate_type: internal
+          candidate_offset: 9001
+          status: COMPLETED
+          interview_duration_minutes: 90
+          feedback_delay_days: 2

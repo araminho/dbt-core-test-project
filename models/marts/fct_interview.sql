@@ -154,5 +154,8 @@ left join status_timestamps
 
 left join candidate_at_creation as cc
   on ics.candidate_id = cc.candidate_id
- and ics.created_at >= cc.valid_from_datetime
- and ics.created_at <  cc.valid_to_datetime
+  and ics.created_at >= cc.valid_from_datetime
+  and (
+    cc.valid_to_datetime is null
+    or ics.created_at < cc.valid_to_datetime
+  )
