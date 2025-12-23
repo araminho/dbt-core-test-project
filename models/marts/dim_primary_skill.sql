@@ -9,3 +9,4 @@ select skill_id as id,
        url,
        parent_id
 from {{ ref('stg_skill_latest') }}
+where skill_id is not null

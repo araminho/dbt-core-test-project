@@ -2,7 +2,7 @@
     materialized='table'
 ) }}
 
-select offset,
+select _offset,
        employee_id as id,
        job_function_id,
        primary_skill_id,
@@ -17,3 +17,4 @@ select offset,
        row_valid_to           as valid_to_datetime
 
 from {{ ref('stg_employee') }}
+where _offset is not null and employee_id is not null

@@ -11,3 +11,4 @@ select job_function_id as id,
        seniority_level,
        seniority_index
 from {{ ref('stg_job_function_latest') }}
+where job_function_id is not null

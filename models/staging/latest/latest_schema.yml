@@ -2,7 +2,7 @@ models:
   - name: stg_candidate_latest
     description: "Latest records for candidates in staging"
     columns:
-      - name: offset
+      - name: _offset
         data_tests:
           - unique
           - not_null
@@ -23,7 +23,7 @@ models:
   - name: stg_employee_latest
     description: "Latest records for employees in staging"
     columns:
-      - name: offset
+      - name: _offset
         data_tests:
           - unique
           - not_null
@@ -44,7 +44,7 @@ models:
   - name: stg_interview_latest
     description: "Latest records for interviews in staging"
     columns:
-      - name: offset
+      - name: _offset
         data_tests:
           - unique
           - not_null
@@ -65,7 +65,7 @@ models:
   - name: stg_job_function_latest
     description: "Latest records for job functions in staging"
     columns:
-      - name: offset
+      - name: _offset
         data_tests:
           - unique
           - not_null
@@ -76,7 +76,7 @@ models:
   - name: stg_skill_latest
     description: "Latest records for skills in staging"
     columns:
-      - name: offset
+      - name: _offset
         data_tests:
           - unique
           - not_null

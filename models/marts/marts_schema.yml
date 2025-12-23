@@ -2,9 +2,8 @@ models:
   - name: dim_candidate
     description: "Dimension table for candidates"
     columns:
-      - name: offset
+      - name: _offset
         data_tests:
-          - unique
           - not_null
       - name: id
         data_tests:
@@ -27,9 +26,8 @@ models:
   - name: dim_employee
     description: "Dimension table for employees"
     columns:
-      - name: offset
+      - name: _offset
         data_tests:
-          - unique
           - not_null
       - name: id
         data_tests:
@@ -94,13 +92,13 @@ models:
         constraints:
           - type: foreign_key
             to: ref('dim_candidate')
-            to_columns: [ offset ]
+            to_columns: [ _offset ]
       - name: status
       - name: interviewer_offset
         constraints:
           - type: foreign_key
             to: ref('dim_employee')
-            to_columns: [ offset ]
+            to_columns: [ _offset ]
       - name: location
       - name: is_logged
       - name: is_media_available

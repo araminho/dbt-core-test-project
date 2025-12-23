@@ -3,10 +3,9 @@
 ) }}
 
 with interview_versions as (
-
     select *
     from {{ ref('stg_interview') }}
-
+    where interview_id is not null
 ),
 
 /* -------------------------------------------
@@ -76,7 +75,7 @@ status_timestamps as (
 candidate_at_creation as (
 
     select
-        dc.offset as candidate_offset,
+        dc._offset as candidate_offset,
         dc.id as candidate_id,
         dc.valid_from_datetime,
         dc.valid_to_datetime
