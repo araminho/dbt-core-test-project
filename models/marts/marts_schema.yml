@@ -1,6 +1,6 @@
 models:
   - name: dim_candidate
-    description: "Dimension table for candidates"
+    description: "Dimension table for candidates. Contains slowly changing attributes of candidates."
     data_tests:
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:
@@ -8,136 +8,270 @@ models:
             - valid_from_datetime
     columns:
       - name: _offset
+        description: "{{ doc('scd_offset') }}"
         data_tests:
           - not_null
+
       - name: id
+        description: "Natural identifier of the candidate."
         data_tests:
           - not_null
+
       - name: primary_skill_id
+        description: "Primary skill associated with the candidate."
         constraints:
           - type: foreign_key
             to: ref('dim_primary_skill')
             to_columns: [ id ]
+
       - name: staffing_status
+        description: "Current staffing status of the candidate."
+
       - name: english_level
+        description: "English proficiency level of the candidate."
+
       - name: job_function_id
+        description: "Job function associated with the candidate."
         constraints:
           - type: foreign_key
             to: ref('dim_job_function')
             to_columns: [ id ]
+
       - name: valid_from_datetime
+        description: "{{ doc('scd_validity_window') }}"
+
       - name: valid_to_datetime
+        description: "{{ doc('scd_validity_window') }}"
+
 
   - name: dim_employee
-    description: "Dimension table for employees"
+    description: "Dimension table for employees. Contains slowly changing employee attributes."
     columns:
       - name: _offset
+        description: "{{ doc('scd_offset') }}"
         data_tests:
           - not_null
+
       - name: id
+        description: "Natural identifier of the employee."
         data_tests:
           - not_null
+
       - name: job_function_id
+        description: "Job function assigned to the employee."
         constraints:
           - type: foreign_key
             to: ref('dim_job_function')
             to_columns: [ id ]
+
       - name: primary_skill_id
+        description: "Primary skill associated with the employee."
         constraints:
           - type: foreign_key
             to: ref('dim_primary_skill')
             to_columns: [ id ]
+
       - name: production_category
+        description: "Production category used for workforce or delivery classification."
+
       - name: employment_status
+        description: "Employment status of the employee (e.g. active, terminated, on leave)."
+
       - name: org_category
+        description: "Organizational category the employee belongs to."
+
       - name: org_category_type
+        description: "Type or classification of the organizational category."
+
       - name: work_start_date
+        description: "Date when the employee started working."
+
       - name: work_end_date
+        description: "Date when the employee ended working, if applicable."
+
       - name: is_active
+        description: "Indicates whether the employee record is currently active."
+
       - name: valid_from_datetime
+        description: "{{ doc('scd_validity_window') }}"
+
       - name: valid_to_datetime
+        description: "{{ doc('scd_validity_window') }}"
+
 
   - name: dim_job_function
-    description: "Dimension table for job functions"
+    description: "Dimension table for job functions and roles."
     columns:
       - name: id
+        description: "Unique identifier of the job function."
         data_tests:
           - unique
           - not_null
+
       - name: base_name
+        description: "Base name of the job function."
+
       - name: category
+        description: "High-level category of the job function."
+
       - name: is_active
+        description: "Indicates whether the job function is currently active."
+
       - name: level
-      - name: track,
+        description: "Level associated with the job function."
+
+      - name: track
+        description: "Career or specialization track of the job function."
+
       - name: seniority_level
+        description: "Seniority level name associated with the job function."
+
       - name: seniority_index
+        description: "Numeric representation of seniority level used for ordering or comparison."
+
 
   - name: dim_primary_skill
-    description: "Dimension table for primary skills"
+    description: "Dimension table for primary skills."
     columns:
       - name: id
+        description: "Unique identifier of the primary skill."
         data_tests:
           - unique
           - not_null
+
       - name: is_active
+        description: "Indicates whether the skill is currently active."
+
       - name: name
+        description: "Name of the primary skill."
+
       - name: type
+        description: "Type or classification of the skill."
+
       - name: url
+        description: "Reference URL with additional information about the skill."
+
       - name: parent_id
+        description: "Identifier of the parent skill in a skill hierarchy."
+
 
   - name: fct_interview
-    description: "Fact table for interviews"
+    description: "{{ doc('fct_interview') }}"
     columns:
       - name: id
+        description: "Unique identifier of the interview."
         data_tests:
           - unique
           - not_null
+
       - name: candidate_type
+        description: "Type of candidate participating in the interview."
+
       - name: candidate_offset
+        description: "Reference to the candidate dimension record valid at interview time."
         constraints:
           - type: foreign_key
             to: ref('dim_candidate')
             to_columns: [ _offset ]
+
       - name: status
+        description: "Current or final status of the interview."
+
       - name: interviewer_offset
+        description: "Reference to the employee dimension record of the interviewer valid at interview time."
         constraints:
           - type: foreign_key
             to: ref('dim_employee')
             to_columns: [ _offset ]
+
       - name: location
+        description: "Location where the interview takes place (e.g. online, onsite)."
+
       - name: is_logged
+        description: "Indicates whether the interview has been logged in the system."
+
       - name: is_media_available
+        description: "Indicates whether media (recording or files) is available for the interview."
+
       - name: run_type
+        description: "Execution or scheduling type of the interview."
+
       - name: type
+        description: "Interview type or format."
+
       - name: media_status
+        description: "Status of interview media processing or availability."
+
       - name: invite_answer_status
+        description: "Response status of the interview invitation."
+
       - name: created_date
+        description: "Date when the interview was created."
         constraints:
           - type: foreign_key
             to: ref('dim_date')
             to_columns: [ date ]
+
       - name: created_datetime
+        description: "Timestamp when the interview was created."
+
       - name: requested_datetime
+        description: "Timestamp when the interview was requested."
+
       - name: scheduled_datetime
+        description: "Timestamp when the interview was scheduled."
+
       - name: started_datetime
+        description: "Timestamp when the interview started."
+
       - name: finished_datetime
+        description: "Timestamp when the interview finished."
+
       - name: feedback_provided_datetime
+        description: "Timestamp when interview feedback was provided."
+
       - name: cancelled_datetime
+        description: "Timestamp when the interview was cancelled."
+
       - name: interview_duration_minutes
+        description: "Duration of the interview in minutes."
+
       - name: feedback_delay_days
+        description: "Number of days between interview completion and feedback submission."
+
 
   - name: dim_date
-    description: "Dimension table for dates"
+    description: "Date dimension table used for calendar-based analysis."
     columns:
       - name: date
-      - name: year
-      - name: quarter
-      - name: month
-      - name: day
-      - name: week
-      - name: day_of_week
-      - name: day_name
-      - name: month_name
-      - name: is_weekend
-      - name: is_holiday
+        description: "Calendar date."
 
+      - name: year
+        description: "Calendar year."
+
+      - name: quarter
+        description: "Calendar quarter."
+
+      - name: month
+        description: "Calendar month number."
+
+      - name: day
+        description: "Day of month."
+
+      - name: week
+        description: "Week number of the year."
+
+      - name: day_of_week
+        description: "Numeric day of week."
+
+      - name: day_name
+        description: "Name of the day of week."
+
+      - name: month_name
+        description: "Name of the month."
+
+      - name: is_weekend
+        description: "Indicates whether the date falls on a weekend."
+
+      - name: is_holiday
+        description: "Indicates whether the date is a holiday."
