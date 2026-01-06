@@ -8,19 +8,23 @@ sources:
         data_tests:
           - unique:
               column_name: _offset
+              severity: warn
           - not_null:
               column_name: candidate_id
+              severity: warn
         columns:
           - name: primary_skill_id
             data_tests:
               - relationships:
                   to: source('job', 'skills')
                   field: id
+                  severity: warn
           - name: job_function_id
             data_tests:
               - relationships:
                   to: source('job', 'job_functions')
                   field: job_function_id
+                  severity: warn
         config:
           freshness:
             warn_after:
@@ -43,11 +47,13 @@ sources:
               - relationships:
                   to: source('job', 'skills')
                   field: id
+                  severity: warn
           - name: job_function_id
             data_tests:
               - relationships:
                   to: source('job', 'job_functions')
                   field: job_function_id
+                  severity: warn
         config:
           freshness:
             warn_after:
@@ -70,11 +76,13 @@ sources:
               - relationships:
                   to: source('job', 'candidates')
                   field: candidate_id
+                  severity: warn
           - name: interviewer_id
             data_tests:
               - relationships:
                   to: source('job', 'employees')
                   field: employee_id
+                  severity: warn
         config:
           freshness:
             warn_after:

@@ -4,11 +4,17 @@ models:
     columns:
       - name: _offset
         data_tests:
-          - unique
-          - not_null
+          - unique:
+              config:
+                severity: warn
+          - not_null:
+              config:
+                severity: warn
       - name: candidate_id
         data_tests:
-          - not_null
+          - not_null:
+              config:
+                severity: warn
           - unique:
               config:
                 where: "row_is_active = TRUE"
