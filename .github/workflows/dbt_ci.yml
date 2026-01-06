@@ -24,6 +24,11 @@ jobs:
       - name: Write BigQuery keyfile
         run: |
           echo '${{ secrets.DBT_BIGQUERY_KEYFILE }}' > keyfile.json
+          
+      - name: Configure dbt profile
+        run: |
+          mkdir -p ~/.dbt
+          echo "${{ secrets.DBT_PROFILES }}" > ~/.dbt/profiles.yml
 
       - name: Export dbt env vars
         run: |
