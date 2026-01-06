@@ -28,7 +28,7 @@ jobs:
       - name: Configure dbt profile
         run: |
           mkdir -p ~/.dbt
-          echo "${{ secrets.DBT_PROFILES }}" > ~/.dbt/profiles.yml
+          printf '%s\n' "${{ secrets.DBT_PROFILES }}" > ~/.dbt/profiles.yml
 
       - name: Export dbt env vars
         run: |
