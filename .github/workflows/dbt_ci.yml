@@ -1,0 +1,38 @@
+name: dbt CI
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  dbt-ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dbt
+        run: |
+          pip install dbt-bigquery
+
+      - name: Write BigQuery keyfile
+        run: |
+          echo '${{ secrets.DBT_BIGQUERY_KEYFILE }}' > keyfile.json
+
+      - name: Export dbt env vars
+        run: |
+          echo "DBT_BIGQUERY_KEYFILE=keyfile.json" >> $GITHUB_ENV
+
+      - name: Install dbt dependencies
+        run: |
+          dbt deps
+
+      - name: Run dbt CI
+        run: |
+          dbt build --target ci
