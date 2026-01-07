@@ -26,13 +26,20 @@ jobs:
           echo '${{ secrets.DBT_BIGQUERY_KEYFILE }}' > keyfile.json
           
       - name: Configure dbt profile
+        env:
+          PROFILES_CONTENT: ${{ secrets.DBT_PROFILES }}
         run: |
           mkdir -p ~/.dbt
-          printf '%s\n' "${{ secrets.DBT_PROFILES }}" > ~/.dbt/profiles.yml
+          echo "$PROFILES_CONTENT" > ~/.dbt/profiles.yml
+
+      - name: Write BigQuery keyfile
+        run: |
+          echo '${{ secrets.DBT_BIGQUERY_KEYFILE }}' > ./keyfile.json
 
       - name: Export dbt env vars
         run: |
-          echo "DBT_BIGQUERY_KEYFILE=keyfile.json" >> $GITHUB_ENV
+          # Use the absolute path to ensure dbt finds it
+          echo "DBT_BIGQUERY_KEYFILE=$(pwd)/keyfile.json" >> $GITHUB_ENV
 
       - name: Install dbt dependencies
         run: |
