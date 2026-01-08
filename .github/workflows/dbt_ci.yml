@@ -32,10 +32,6 @@ jobs:
           mkdir -p ~/.dbt
           echo "$PROFILES_CONTENT" > ~/.dbt/profiles.yml
 
-      - name: Write BigQuery keyfile
-        run: |
-          echo '${{ secrets.DBT_BIGQUERY_KEYFILE }}' > ./keyfile.json
-
       - name: Export dbt env vars
         run: |
           # Use the absolute path to ensure dbt finds it
