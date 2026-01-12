@@ -81,6 +81,20 @@ candidate_at_creation as (
         dc.valid_to_datetime
     from {{ ref('dim_candidate') }} dc
 
+),
+
+/* -------------------------------------------
+   Join interviewer dimension AS OF creation
+------------------------------------------- */
+interviewer_at_creation as (
+
+    select
+        de._offset as interviewer_offset,
+        de.id      as interviewer_id,
+        de.valid_from_datetime,
+        de.valid_to_datetime
+    from {{ ref('dim_employee') }} de
+
 )
 
 select
@@ -96,7 +110,7 @@ select
        Descriptive attributes (as of creation)
     --------------------------------------- */
     sil.status,
-    ics.interviewer_id as interviewer_offset,
+    ie.interviewer_offset,
     ics.location,
     ics.is_logged,
     ics.is_media_available,
@@ -158,4 +172,12 @@ left join candidate_at_creation as cc
   and (
     cc.valid_to_datetime is null
     or ics.created_at < cc.valid_to_datetime
+  )
+
+left join interviewer_at_creation as ie
+  on ics.interviewer_id = ie.interviewer_id
+  and ics.created_at >= ie.valid_from_datetime
+  and (
+      ie.valid_to_datetime is null
+      or ics.created_at < ie.valid_to_datetime
   )

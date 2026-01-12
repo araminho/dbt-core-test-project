@@ -4,8 +4,8 @@
 
 select _offset,
        employee_id as id,
-       job_function_id,
-       primary_skill_id,
+       nullif(job_function_id, '') as job_function_id,
+       nullif(primary_skill_id, '') as primary_skill_id,
        production_category,
        employment_status,
        org_category,

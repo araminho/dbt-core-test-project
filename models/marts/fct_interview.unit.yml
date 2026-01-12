@@ -54,11 +54,19 @@ unit_tests:
             valid_from_datetime: 2023-01-01 00:00:00
             valid_to_datetime: null
 
+      - input: ref('dim_employee')
+        rows:
+          - id: 200
+            _offset: 8001
+            valid_from_datetime: 2023-01-01 00:00:00
+            valid_to_datetime: null
+
     expect:
       rows:
         - id: 1
           candidate_type: internal
           candidate_offset: 9001
+          interviewer_offset: 8001
           status: COMPLETED
           interview_duration_minutes: 90
           feedback_delay_days: 2

@@ -23,6 +23,11 @@ models:
           - type: foreign_key
             to: ref('dim_primary_skill')
             to_columns: [ id ]
+        data_tests:
+          - relationships:
+              to: ref('dim_primary_skill')
+              field: id
+              severity: warn
 
       - name: staffing_status
         description: "Current staffing status of the candidate."
@@ -36,6 +41,11 @@ models:
           - type: foreign_key
             to: ref('dim_job_function')
             to_columns: [ id ]
+        data_tests:
+          - relationships:
+              to: ref('dim_job_function')
+              field: id
+              severity: warn
 
       - name: valid_from_datetime
         description: "{{ doc('scd_validity_window') }}"
@@ -63,6 +73,11 @@ models:
           - type: foreign_key
             to: ref('dim_job_function')
             to_columns: [ id ]
+        data_tests:
+          - relationships:
+              to: ref('dim_job_function')
+              field: id
+              severity: warn
 
       - name: primary_skill_id
         description: "Primary skill associated with the employee."
@@ -70,6 +85,11 @@ models:
           - type: foreign_key
             to: ref('dim_primary_skill')
             to_columns: [ id ]
+        data_tests:
+          - relationships:
+              to: ref('dim_primary_skill')
+              field: id
+              severity: warn
 
       - name: production_category
         description: "Production category used for workforce or delivery classification."
@@ -173,6 +193,11 @@ models:
           - type: foreign_key
             to: ref('dim_candidate')
             to_columns: [ _offset ]
+        data_tests:
+          - relationships:
+              to: ref('dim_candidate')
+              field: _offset
+              severity: warn
 
       - name: status
         description: "Current or final status of the interview."
@@ -183,6 +208,10 @@ models:
           - type: foreign_key
             to: ref('dim_employee')
             to_columns: [ _offset ]
+        data_tests:
+          - relationships:
+              to: ref('dim_employee')
+              field: _offset
 
       - name: location
         description: "Location where the interview takes place (e.g. online, onsite)."
@@ -241,9 +270,12 @@ models:
 
 
   - name: dim_date
-    description: "Date dimension table used for calendar-based analysis."
+    description: "A time spine with one row per day, ranging from 1990-01-01 to 2030-01-01."
+    time_spine:
+      standard_granularity_column: date  # Column for the standard grain of your table
     columns:
       - name: date
+        granularity: day
         description: "Calendar date."
 
       - name: year
