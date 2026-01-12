@@ -1,0 +1,14 @@
+semantic_models:
+  - name: sm_candidates
+    model: ref('dim_candidate')
+
+    entities:
+      - name: candidate
+        type: primary
+        expr: _offset
+
+    dimensions:
+      - name: english_level
+        type: categorical
+      - name: staffing_status
+        type: categorical

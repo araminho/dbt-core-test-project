@@ -1,0 +1,30 @@
+saved_queries:
+  - name: interview_efficiency_by_english_and_status
+    description: >
+      "Shows average interview duration and feedback delay, grouped by candidate English level and interview status, for the past year."
+    label: Interview Efficiency by English Level & Status
+    query_params:
+      metrics:
+        - avg_interview_duration
+        - avg_feedback_delay_days
+        - total_interviews
+      group_by:
+        - "Dimension('candidate__english_level')"
+        - "Dimension('interview__status')"
+      where:
+        # Use TimeDimension for time-based filtering
+        # Use BigQuery compatible date logic
+        - "{{ TimeDimension('interview__created_at', 'day') }} >= DATE_SUB(CURRENT_DATE(), INTERVAL 2 YEAR)"
+  - name: interviewer_efficiency_insight
+    description: "A comprehensive look at interview volume, duration, and feedback speed."
+    label: "Interviewer Efficiency Insight"
+    query_params:
+      metrics:
+        - total_interviews
+        - avg_interview_duration
+        - avg_feedback_delay_days
+      group_by:
+        - "TimeDimension('interview__created_at', 'month')"
+        - "Dimension('interviewer__production_category')"
+      where:
+        - "{{ Dimension('interview__status') }} = 'COMPLETED'"

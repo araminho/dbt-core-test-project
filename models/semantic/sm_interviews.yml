@@ -1,0 +1,46 @@
+semantic_models:
+  - name: sm_interviews
+    model: ref('fct_interview')
+    defaults:
+      agg_time_dimension: created_at
+
+    entities:
+      - name: interview
+        type: primary
+        expr: id
+      - name: candidate
+        type: foreign
+        expr: candidate_offset # Matches dim_candidate._offset
+      - name: interviewer
+        type: foreign
+        expr: interviewer_offset # Matches dim_employee._offset
+
+    dimensions:
+      - name: status
+        type: categorical
+      - name: interview_type
+        type: categorical
+        expr: type
+      - name: created_at
+        type: time
+        type_params:
+          time_granularity: day
+        expr: created_date
+
+    measures:
+      - name: total_interviews
+        description: "Count of all interviews scheduled."
+        agg: count
+        expr: 1
+      - name: total_duration
+        description: "Sum of interview minutes."
+        agg: sum
+        expr: interview_duration_minutes
+      - name: feedback_delay_sum
+        description: "Sum of days for feedback (used for avg metric)."
+        agg: sum
+        expr: feedback_delay_days
+      - name: unique_interviewers
+        description: "Unique count of interviewers."
+        agg: count_distinct
+        expr: interviewer_offset

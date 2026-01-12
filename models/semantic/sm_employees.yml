@@ -1,0 +1,14 @@
+semantic_models:
+  - name: sm_employees
+    model: ref('dim_employee')
+
+    entities:
+      - name: interviewer
+        type: primary
+        expr: _offset
+
+    dimensions:
+      - name: production_category
+        type: categorical
+      - name: employment_status
+        type: categorical

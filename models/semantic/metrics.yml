@@ -1,0 +1,70 @@
+metrics:
+  # --- FOUNDATIONAL SIMPLE METRICS (Required for Ratios) ---
+  - name: total_duration
+    description: "The total sum of interview minutes."
+    label: "Total Duration"
+    type: simple
+    type_params:
+      measure: total_duration
+
+  - name: total_interviews
+    description: "The total count of all interviews."
+    label: "Total Interview Count"
+    type: simple
+    type_params:
+      measure: total_interviews
+
+  - name: feedback_delay_sum
+    description: "Sum of days for feedback."
+    label: "Feedback Delay Sum"
+    type: simple
+    type_params:
+      measure: feedback_delay_sum
+
+
+  # 1. Average Interview Duration (Ratio Metric)
+  - name: avg_interview_duration
+    description: "The average length of an interview in minutes."
+    type: ratio
+    label: "Avg Duration (Min)"
+    type_params:
+      numerator: total_duration
+      denominator: total_interviews
+
+  # 2. Average Feedback Delay (Ratio Metric)
+  - name: avg_feedback_delay_days
+    description: "The average days between interview completion and feedback submission."
+    type: ratio
+    label: "Avg Feedback Delay"
+    type_params:
+      numerator: feedback_delay_sum
+      denominator: total_interviews
+
+  # 3. High-English-Level Candidate Interviews (Filtered Simple Metric)
+  - name: interviews_high_english
+    description: "Interviews conducted with candidates having C1 or C2 English levels."
+    type: simple
+    label: "High English Level Interviews"
+    type_params:
+      measure: total_interviews
+    filter: |
+      {{ Dimension('candidate__english_level') }} IN ('C1', 'C2')
+
+  # 4. Active Interviewer Count (Unique Count Metric)
+  # Ensure you added 'unique_interviewers' measure to sm_interviews.yml
+  - name: active_interviewer_count
+    description: "The number of unique employees who conducted at least one interview."
+    type: simple
+    label: "Active Interviewers"
+    type_params:
+      measure: unique_interviewers
+
+  # 5. Completed Interviews (Filtered Simple Metric)
+  - name: completed_interviews
+    description: "The count of interviews that reached a finished status."
+    type: simple
+    label: "Completed Interviews"
+    type_params:
+      measure: total_interviews
+    filter: |
+      {{ Dimension('interview__status') }} = 'finished'
