@@ -4,29 +4,25 @@ models:
     columns:
       - name: _offset
         data_tests:
-          - unique:
-              config:
-                severity: warn
-          - not_null:
-              config:
-                severity: warn
+          - unique
+          - not_null
       - name: candidate_id
         data_tests:
-          - not_null:
-              config:
-                severity: warn
+          - not_null
           - unique:
               config:
                 where: "row_is_active = TRUE"
       - name: primary_skill_id
         data_tests:
           - relationships:
-              to: ref('stg_skills')
+              arguments:
+              to: ref('stg_skill')
               field: skill_id
       - name: job_function_id
         data_tests:
           - relationships:
-              to: ref('stg_job_functions')
+              arguments:
+              to: ref('stg_job_function')
               field: job_function_id
     tests:
       - dbt_utils.unique_combination_of_columns:
@@ -50,13 +46,15 @@ models:
       - name: primary_skill_id
         data_tests:
           - relationships:
-              to: ref('stg_skills')
-              field: skill_id
+              arguments:
+                to: ref('stg_skill')
+                field: skill_id
       - name: job_function_id
         data_tests:
           - relationships:
-              to: ref('stg_job_functions')
-              field: job_function_id
+              arguments:
+                to: ref('stg_job_function')
+                field: job_function_id
   - name: stg_interview
     description: "Staging table for interviews"
     columns:
@@ -73,13 +71,15 @@ models:
       - name: candidate_id
         data_tests:
           - relationships:
-              to: ref('stg_candidate')
-              field: candidate_id
+              arguments:
+                to: ref('stg_candidate')
+                field: candidate_id
       - name: interviewer_id
         data_tests:
           - relationships:
-              to: ref('stg_employee')
-              field: employee_id
+              arguments:
+                to: ref('stg_employee')
+                field: employee_id
   - name: stg_job_function
     description: "Staging table for job functions"
     columns:
@@ -93,7 +93,7 @@ models:
           - unique:
               config:
                 where: "row_is_active = TRUE"
-  - name: stg_skills
+  - name: stg_skill
     description: "Staging table for skills"
     columns:
       - name: _offset

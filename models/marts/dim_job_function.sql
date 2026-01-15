@@ -1,7 +1,3 @@
-{{ config(
-    materialized='table'
-) }}
-
 select job_function_id as id,
        base_name,
        category,

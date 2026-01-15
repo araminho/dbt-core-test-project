@@ -1,7 +1,3 @@
-{{ config(
-    materialized='table'
-) }}
-
 select _offset,
        candidate_id as id,
        nullif(primary_skill_id, '') as primary_skill_id,

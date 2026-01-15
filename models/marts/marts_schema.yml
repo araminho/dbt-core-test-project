@@ -3,9 +3,10 @@ models:
     description: "Dimension table for candidates. Contains slowly changing attributes of candidates."
     data_tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - id
-            - valid_from_datetime
+          arguments:
+            combination_of_columns:
+              - id
+              - valid_from_datetime
     columns:
       - name: _offset
         description: "{{ doc('scd_offset') }}"
@@ -25,9 +26,10 @@ models:
             to_columns: [ id ]
         data_tests:
           - relationships:
-              to: ref('dim_primary_skill')
-              field: id
-              severity: warn
+              arguments:
+                to: ref('dim_primary_skill')
+                field: id
+                severity: warn
 
       - name: staffing_status
         description: "Current staffing status of the candidate."
@@ -43,9 +45,10 @@ models:
             to_columns: [ id ]
         data_tests:
           - relationships:
-              to: ref('dim_job_function')
-              field: id
-              severity: warn
+              arguments:
+                to: ref('dim_job_function')
+                field: id
+                severity: warn
 
       - name: valid_from_datetime
         description: "{{ doc('scd_validity_window') }}"
@@ -75,9 +78,10 @@ models:
             to_columns: [ id ]
         data_tests:
           - relationships:
-              to: ref('dim_job_function')
-              field: id
-              severity: warn
+              arguments:
+                to: ref('dim_job_function')
+                field: id
+                severity: warn
 
       - name: primary_skill_id
         description: "Primary skill associated with the employee."
@@ -87,9 +91,10 @@ models:
             to_columns: [ id ]
         data_tests:
           - relationships:
-              to: ref('dim_primary_skill')
-              field: id
-              severity: warn
+              arguments:
+                to: ref('dim_primary_skill')
+                field: id
+                severity: warn
 
       - name: production_category
         description: "Production category used for workforce or delivery classification."
@@ -195,9 +200,10 @@ models:
             to_columns: [ _offset ]
         data_tests:
           - relationships:
-              to: ref('dim_candidate')
-              field: _offset
-              severity: warn
+              arguments:
+                to: ref('dim_candidate')
+                field: _offset
+                severity: warn
 
       - name: status
         description: "Current or final status of the interview."
@@ -210,8 +216,9 @@ models:
             to_columns: [ _offset ]
         data_tests:
           - relationships:
-              to: ref('dim_employee')
-              field: _offset
+              arguments:
+                to: ref('dim_employee')
+                field: _offset
 
       - name: location
         description: "Location where the interview takes place (e.g. online, onsite)."

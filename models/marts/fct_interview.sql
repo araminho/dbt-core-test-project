@@ -1,7 +1,3 @@
-{{ config(
-    materialized='table'
-) }}
-
 with interview_versions as (
     select *
     from {{ ref('stg_interview') }}

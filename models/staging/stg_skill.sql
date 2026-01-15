@@ -1,7 +1,3 @@
-{{ config(
-    materialized='table'
-) }}
-
 {{ generate_staging_model(
     table_name='skills',
     unique_key='skill_id',

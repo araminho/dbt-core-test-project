@@ -1,7 +1,3 @@
-{{ config(
-    materialized='table'
-) }}
-
 select _offset,
        employee_id as id,
        nullif(job_function_id, '') as job_function_id,

@@ -1,7 +1,3 @@
-{{ config(
-    materialized='table'
-) }}
-
 select skill_id as id,
        is_active,
        type,

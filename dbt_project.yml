@@ -22,3 +22,19 @@ snapshot-paths: ["snapshots"]
 clean-targets:         # directories to be removed by `dbt clean`
   - "target"
   - "dbt_packages"
+
+models:
+  aram_dbt_project:
+    staging:
+      +materialized: view
+      +required_tests: {"unique.*|not_null": 1}
+    marts:
+      +materialized: table
+      +required_tests: {"unique.*|not_null": 1}
+
+tests:
+  aram_dbt_project:
+    staging:
+      +severity: warn
+    sources:
+      +severity: warn
