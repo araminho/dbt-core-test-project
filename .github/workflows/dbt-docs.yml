@@ -2,7 +2,7 @@ name: Build and Deploy dbt Docs
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "github-pages" ]
   workflow_dispatch:
 
 permissions:
