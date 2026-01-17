@@ -31,8 +31,8 @@ models:
     marts:
       +materialized: table
       +required_tests: {"unique.*|not_null": 1}
-    elementary:
-      +schema: "elementary"
+#    elementary:
+#      +schema: "elementary"
 
 tests:
   aram_dbt_project:
